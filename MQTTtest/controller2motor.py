@@ -60,11 +60,9 @@ def main():
         while not done:
 #            print(pygame.key.get_pressed())
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or event.key == pygame.K_q:
-                    done = True
-                
                 if event.type == pygame.KEYDOWN:
-                    
+                    if event.type == pygame.QUIT or event.key == pygame.K_q:
+                        done = True
                     if event.key == pygame.K_LEFT:
                         uc2.devices['Motor_x'].send(-1)
                     if event.key == pygame.K_RIGHT:
