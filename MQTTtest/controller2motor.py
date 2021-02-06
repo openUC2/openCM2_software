@@ -34,9 +34,9 @@ def main():
     uc2 = MQTTtest(setup_name=setup_name,device_ID=device_ID,device_MQTT_name=device_MQTT_name,mqtt_broker_ip=mqtt_broker_ip,mqtt_client_name=mqtt_client_name,mqtt_client_pass=mqtt_client_pass,mqtt_port=mqtt_port,mqtt_keepalive=mqtt_keepalive,mqtt_uselogin=mqtt_uselogin)
 
     # add a motor
-    uc2.mqtt_register_devices(device_name='Motor_z',device_ID='MOT01')
-    uc2.mqtt_register_devices(device_name='Motor_x',device_ID='MOT02')
-    uc2.mqtt_register_devices(device_name='Motor_y',device_ID='MOT02')
+    uc2.mqtt_register_devices(device_name='Motor_z',device_ID='OCM21')
+    uc2.mqtt_register_devices(device_name='Motor_x',device_ID='OCM21')
+    uc2.mqtt_register_devices(device_name='Motor_y',device_ID='OCM21')
  
     fps = 20
     pygame.init()
@@ -64,17 +64,17 @@ def main():
                     if event.type == pygame.QUIT or event.key == pygame.K_q:
                         done = True
                     if event.key == pygame.K_LEFT:
-                        uc2.devices['Motor_x'].send(-1)
+                        uc2.devices['Motor_x'].send("MM_X",-1)
                     if event.key == pygame.K_RIGHT:
-                        uc2.devices['Motor_x'].send(1)
+                        uc2.devices['Motor_x'].send("MM_X",1)
                     if event.key == pygame.K_UP:
-                        uc2.devices['Motor_y'].send(1)
+                        uc2.devices['Motor_y'].send("MM_Y",1)
                     if event.key == pygame.K_DOWN:
-                        uc2.devices['Motor_y'].send(-1)
+                        uc2.devices['Motor_y'].send("MM_Y",-1)
                     if event.key == pygame.K_w:
-                        uc2.devices['Motor_z'].send(1)
+                        uc2.devices['Motor_z'].send("MM_Z",1)
                     if event.key == pygame.K_s:
-                        uc2.devices['Motor_z'].send(-1)
+                        uc2.devices['Motor_z'].send("MM_Z",-1)
             clock.tick(fps)            
                         
     else:                    
