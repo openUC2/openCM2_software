@@ -40,9 +40,10 @@ def main():
     mqtt_keepalive      = 60
     mqtt_uselogin       = False
 
-    sensitivity = 10
-    sensitivity_scaling = 1.2
+
     messages_per_sec = 20
+    
+    speed = 10
 
     # init class and auto-connect to server
     uc2 = MQTTtest(setup_name=setup_name,device_ID=device_ID,device_MQTT_name=device_MQTT_name,mqtt_broker_ip=mqtt_broker_ip,mqtt_client_name=mqtt_client_name,mqtt_client_pass=mqtt_client_pass,mqtt_port=mqtt_port,mqtt_keepalive=mqtt_keepalive,mqtt_uselogin=mqtt_uselogin)
@@ -79,43 +80,21 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.type == pygame.QUIT or event.key == pygame.K_q:
                         done = True
-                    if event.key == pygame.K_a:
-                            sensitivity/=sensitivity_scaling
-                    if event.key == pygame.K_d:
-                            sensitivity*=sensitivity_scaling
+                    if event.key == pygame.K_a or event.key == pygame.K_d:
+                        if event.key == pygame.K_a:
+                            speed -= 1
+                        if event.key == pygame.K_d:
+                            speed += 1
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                uc2.devices['Motor_x'].send("MM_X",-sensitivity)
-            if keys[pygame.K_RIGHT]:
-                uc2.devices['Motor_x'].send("MM_X",sensitivity)
-            if keys[pygame.K_UP]:
-                uc2.devices['Motor_x'].send("MM_Y",sensitivity)
-            if keys[pygame.K_DOWN]:
-                uc2.devices['Motor_y'].send("MM_Y",-sensitivity)
-            if keys[pygame.K_w]:
-                uc2.devices['Motor_z'].send("MM_Z",sensitivity)
-            if keys[pygame.K_s]:
-                uc2.devices['Motor_z'].send("MM_Z",-sensitivity)
+                uc2.devices['Motor_x'].send("MM_X",-speed)
+            elif keys[pygame.K_RIGHT]:
+                uc2.devices['Motor_x'].send("MM_X",speed)
+            else: 
+                uc2.devices['Motor_x'].send("MM_X",0)
 
-            # for event in pygame.event.get():
-            #     if event.type == pygame.KEYDOWN:
-            #         if event.type == pygame.QUIT or event.key == pygame.K_q:
-            #             done = True
-            #         if event.key == pygame.K_LEFT:
-            #             uc2.devices['Motor_x'].send("MM_X",-1)
-            #         if event.key == pygame.K_RIGHT:
-            #             uc2.devices['Motor_x'].send("MM_X",1)
-            #         if event.key == pygame.K_UP:
-            #             uc2.devices['Motor_y'].send("MM_Y",1)
-            #         if event.key == pygame.K_DOWN:
-            #             uc2.devices['Motor_y'].send("MM_Y",-1)
-            #         if event.key == pygame.K_w:
-            #             uc2.devices['Motor_z'].send("MM_Z",1)
-            #         if event.key == pygame.K_s:
-            #             uc2.devices['Motor_z'].send("MM_Z",-1)
-
-            textsurface = front_screen.render('Sensitivity {:.2f}:'.format(sensitivity), False, (255, 255, 255))
+            textsurface = front_screen.render('RPMs {:.2f}:'.format(speed), False, (255, 255, 255))
             screen.blit(textsurface,(0,0))
             clock.tick(messages_per_sec)            
                         
