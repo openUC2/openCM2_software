@@ -41,9 +41,9 @@ def main():
     mqtt_uselogin       = False
 
 
-    messages_per_sec = 20
+    messages_per_sec = 10
     
-    speed = 10
+    speed = 50
 
     # init class and auto-connect to server
     uc2 = MQTTtest(setup_name=setup_name,device_ID=device_ID,device_MQTT_name=device_MQTT_name,mqtt_broker_ip=mqtt_broker_ip,mqtt_client_name=mqtt_client_name,mqtt_client_pass=mqtt_client_pass,mqtt_port=mqtt_port,mqtt_keepalive=mqtt_keepalive,mqtt_uselogin=mqtt_uselogin)
@@ -107,7 +107,9 @@ def main():
             r3_axis = [joystick.get_axis(i) for i in [Axis.r3_x,Axis.r3_y]]
             
             if np.abs(l3_axis[0])>0.1:
-                uc2.devices['Motor_x'].send(l3_axis[0])
+                uc2.devices['Motor_x'].send("MM_X", l3_axis[0]*speed)
+            else:
+                uc2.devices['Motor_x'].send("MM_X", 0)                
             if np.abs(l3_axis[1])>0.1:
                 uc2.devices['Motor_y'].send(l3_axis[1])                
             if np.abs(r3_axis[1])>0.1:
