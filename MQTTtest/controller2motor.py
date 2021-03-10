@@ -14,9 +14,7 @@ from cmdInterface import MQTTtest
     
 # ============================================================================ #
 # ============================================================================ #
-# ============================================================================ #
-# ============================================================================ #
-# ============================================================================ #
+
 
 def print_help():
     print("\tPress LEFT and RIGHT to move in X-direction")
@@ -27,26 +25,39 @@ def print_help():
 
 
 class Motor:
-    def __init__(self, sensitivity=1, speed0 = 50, n_bins=10, setup_name=None, device_ID=None, mqtt_client=None, motor_name=None):
+    def __init__(self, sensitivity=1, n_bins=10, setup_name=None, device_ID=None, mqtt_client=None, motor_name=None):
         self.dx = 0
         self.mqtt = MQTTDevice(setup=setup_name, device=device_ID, mqtt_client=mqtt_client)
         self.sensitivity = sensitivity
         self.bins = np.linspace(0, 1.01, n_bins)
         self.motor_name = motor_name
-        self.speed = speed0
 
-    def get_new_dx(self, defl):
-        return np.sign(defl) * self.speed * np.power(self.bins[np.digitize(np.abs(defl), self.bins)], self.sensitivity)
+    def get_new_dx(self, defl, speed):
+        return np.sign(defl) * speed * np.power(self.bins[np.digitize(np.abs(defl), self.bins)], self.sensitivity)
 
-    def send(self, current_dx):
-        new_dx = self.get_new_dx(current_dx)
+    def send(self, current_dx, speed):
+        new_dx = self.get_new_dx(current_dx, speed)
         if self.dx != new_dx:
             self.mqtt.send(self.motor_name, new_dx)
             self.dx = new_dx
         else:
             pass
 
+def display_params(screen, speed):
+    screen.fill(pygame.Color('white'))
+    font = pygame.font.SysFont("DejaVu Sans Mono", 20)
 
+    label = font.render("Speed: {:.1f}".format(speed), 1, (0,0,0))
+
+    screen_size = pygame.display.get_surface().get_size()
+    text_rect = label.get_rect(center=(screen_size[0]/2, screen_size[1]/2))
+    screen.blit(label, text_rect)
+
+    pygame.display.update()
+
+# ============================================================================ #
+# ============================================================================ #
+# ============================================================================ #
 def main():
     import pygame
     # ============== set sever parameters ==============
@@ -84,7 +95,6 @@ def main():
 
     # add the motors
     motor_x = Motor(    sensitivity=sensitivity, 
-                        speed0=speed, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
                         device_ID="OCM21", 
@@ -92,7 +102,6 @@ def main():
                         mqtt_client = uc2.mqtt_client)
 
     motor_y = Motor(    sensitivity=sensitivity, 
-                        speed0=speed, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
                         device_ID="OCM21", 
@@ -101,7 +110,6 @@ def main():
 
 
     motor_z = Motor(    sensitivity=sensitivity, 
-                        speed0=speed, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
                         device_ID="OCM21", 
@@ -112,7 +120,9 @@ def main():
     
     # ============== initialize the joystick ==============
     pygame.init()
-    # front_screen = pygame.font.SysFont('Comic Sans MS', 30)
+
+    screen = pygame.display.set_mode((200,100))
+    
     clock = pygame.time.Clock() # Used to manage how fast the screen updates.
 
     joystick_count = pygame.joystick.get_count()
@@ -128,68 +138,62 @@ def main():
     done = False
     print_help()
 
-    if not use_controller:
-        while not done:
+    while not done:
+        if not use_controller:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.type == pygame.QUIT or event.key == pygame.K_q:
                         done = True
                     if event.key == pygame.K_a or event.key == pygame.K_d:
                         if event.key == pygame.K_a:
-                            motor_x.speed /= speed_increase
-                            motor_y.speed /= speed_increase
-                            motor_z.speed /= speed_increase
+                            speed /= speed_increase
                         if event.key == pygame.K_d:
-                            motor_x.speed *= speed_increase
-                            motor_y.speed *= speed_increase
-                            motor_z.speed *= speed_increase
+                            speed *= speed_increase
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                motor_x.send(-1)
+                motor_x.send(-1, speed)
             elif keys[pygame.K_RIGHT]:
-                motor_x.send(1)
+                motor_x.send(1, speed)
             else:
-                motor_x.send(0)
+                motor_x.send(0, speed)
             
             if keys[pygame.K_DOWN]:
-                motor_y.send(-1)
+                motor_y.send(-1, speed)
             elif keys[pygame.K_UP]:
-                motor_y.send(1)
+                motor_y.send(1, speed)
             else:
-                motor_y.send(0)
+                motor_y.send(0, speed)
             
             if keys[pygame.K_s]:
-                motor_z.send(-1)
+                motor_z.send(-1, speed)
             elif keys[pygame.K_w]:
-                motor_z.send(1)
+                motor_z.send(1, speed)
             else:
-                motor_z.send(0)
+                motor_z.send(0, speed)
 
+            display_params(screen, speed)
             clock.tick(messages_per_sec)            
                         
-    else:                    
-        while not done:
+        else:
             for event in pygame.event.get():                
                 if joystick.get_button(Buttons.select):
                     done = True
                 if joystick.get_button(Buttons.up):
-                    motor_x.speed *= speed_increase
-                    motor_y.speed *= speed_increase
-                    motor_z.speed *= speed_increase
+                    speed *= speed_increase
                 if joystick.get_button(Buttons.down):
-                    motor_x.speed /= speed_increase
-                    motor_y.speed /= speed_increase
-                    motor_z.speed /= speed_increase
+                    speed /= speed_increase
 
             l3_axis = [joystick.get_axis(i) for i in [Axis.l3_x,Axis.l3_y]] # [0,1]
             r3_axis = [joystick.get_axis(i) for i in [Axis.r3_x,Axis.r3_y]]
             
-            motor_x.send(l3_axis[0])
-            motor_y.send(l3_axis[1])
-            motor_z.send(r3_axis[1])
-
+            motor_x.send(l3_axis[0], speed)
+            motor_y.send(l3_axis[1], speed)
+            motor_z.send(r3_axis[1], speed)
+            
+            display_params(screen, speed)
             clock.tick(messages_per_sec)
+
             
     pygame.quit()
 
