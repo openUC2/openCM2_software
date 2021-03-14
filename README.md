@@ -15,7 +15,6 @@ sudo apt-get upgrade
 sudo apt-get install libusb-dev
 
 wget http://www.pabr.org/sixlinux/sixpair.c
-gcc -o sixpair.c -lusb
 gcc -o sixpair sixpair.c -lusb
 
 reboot
