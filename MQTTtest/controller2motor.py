@@ -75,6 +75,8 @@ def main():
     mqtt_keepalive      = 60
     mqtt_uselogin       = False
 
+
+    device_IDs = ["OCM21", "OCM22", "OCM23"]
     # ============== set joystick parameters ==============
     messages_per_sec = 50
 
@@ -99,14 +101,14 @@ def main():
     motor_x = Motor(    sensitivity=sensitivity, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
-                        device_ID="OCM21", 
+                        device_ID=device_IDs[0], 
                         motor_name="MM_X", 
                         mqtt_client = uc2.mqtt_client)
 
     motor_y = Motor(    sensitivity=sensitivity, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
-                        device_ID="OCM21", 
+                        device_ID=device_IDs[1], 
                         motor_name="MM_Y",
                         mqtt_client = uc2.mqtt_client)
 
@@ -114,7 +116,7 @@ def main():
     motor_z = Motor(    sensitivity=sensitivity, 
                         n_bins=n_bins, 
                         setup_name=setup_name, 
-                        device_ID="OCM21", 
+                        device_ID=device_IDs[2], 
                         motor_name="MM_Z",
                         mqtt_client = uc2.mqtt_client)
                      
