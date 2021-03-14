@@ -37,11 +37,13 @@ class Motor:
 
     def send(self, current_dx, speed):
         new_dx = self.get_new_dx(current_dx, speed)
-        if self.dx != new_dx:
-            self.mqtt.send(self.motor_name, new_dx)
-            self.dx = new_dx
-        else:
-            pass
+        # if self.dx != new_dx:
+        #     self.mqtt.send(self.motor_name, new_dx)
+        #     self.dx = new_dx
+        # else:
+        #     pass
+        self.mqtt.send(self.motor_name, new_dx)
+        self.dx = new_dx
 
 def display_params(screen, speed):
     screen.fill(pygame.Color('white'))
@@ -80,7 +82,7 @@ def main():
     speed = 50
     n_bins = 10
     sensitivity = 1.4
-    speed_increase = 1.2
+    speed_increase = 1.05
 
     # init class and auto-connect to server
     uc2 = MQTTtest( setup_name=setup_name,
