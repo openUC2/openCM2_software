@@ -1,4 +1,5 @@
 # openCM2
+This is the software part of the openCM2 project, the hardware part can be found under https://github.com/bjks/openCM2_hardware.
 
 ## Non-UC2 Dependencies 
 - numpy
@@ -37,7 +38,7 @@ sudo bluetoothctl
     trust <controller adress, eg.00:00:00:00:00>    
     connect <controller adress, eg.00:00:00:00:00>    
 ```
-Now your controller is connected.
+Now your controller is connected. You can find more information [here](https://approxeng.github.io/approxeng.input/api/dualshock3.html).
 
 ### Install pygame and paho-mqtt
 To install pygame, we first install all dependencies:
