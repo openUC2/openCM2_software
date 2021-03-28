@@ -5,14 +5,14 @@ This is the software part of the openCM2 project, the hardware part can be found
 - numpy
 - pygame 
 
-## Installation
+## 1. Installation and setup
 If you are using the UC2 virtual environment, we recommend to do the installation in this environment as well.
 The installation includes:
 - connecting the controller to the Raspberry Pi
 - install pygame
 - install paho-mqtt
 
-### Connecting the controller
+### 1.1 Connecting the controller
 ```
 sudo apt-get update
 sudo apt-get upgrade
@@ -40,7 +40,7 @@ sudo bluetoothctl
 ```
 Now your controller is connected. You can find more information [here](https://approxeng.github.io/approxeng.input/api/dualshock3.html).
 
-### Install pygame and paho-mqtt
+### 1.2 Install pygame and paho-mqtt
 To install pygame, we first install all dependencies:
 ```
 sudo apt-get install python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev   libsdl1.2-dev libsmpeg-dev python-numpy subversion libportmidi-dev ffmpeg libswscale-dev libavformat-dev libavcodec-dev
@@ -54,7 +54,7 @@ Lastly, we need to install paho-mqtt with
 pip install paho-mqtt
 ```
 
-## Usage
+## 2. Usage
 To run the script you need to run 
 ```
 python controller2motor.py
