@@ -63,6 +63,6 @@ class MQTTDevice(object):
                 cmd += str(arg)
             cmd += delim
                  
-        if logme:
-            print("MQTTDevice_extractCommand -> topic_spec={}, cmd={}.".format(self.topic_base, cmd[:-1]))
+        # if logme:
+        #     print("MQTTDevice_extractCommand -> topic_spec={}, cmd={}.".format(self.topic_base, cmd[:-1]))
         return cmd[:-1]
