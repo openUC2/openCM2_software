@@ -59,3 +59,4 @@ To run the script you need to run
 ```
 python controller2motor.py
 ```
+The message in the terminal explains the botton settings. Once everything is setup a window will show up, as long as this window is you active window the program reacts to the controller input. To avoid that, bring the window of the program to the background. 
