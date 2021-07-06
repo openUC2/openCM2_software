@@ -1,16 +1,11 @@
 # openCM2
-This is the software part of the openCM2 project, the hardware part can be found under https://github.com/bjks/openCM2_hardware.
-
-## Non-UC2 Dependencies 
-- numpy
-- pygame 
+This is the software part of the openCM2 project, the hardware part can be found **[here](https://github.com/bjks/openCM2_hardware)**. Here, we provide the code to send signals to the ESP32 micro-controler that are connected to the motors. First you need to download/clone this repository to your Raspberry Pi, from which you will control the micro-manipulator.
 
 ## 1. Installation and setup
 If you are using the UC2 virtual environment, we recommend to do the installation in this environment as well.
 The installation includes:
 - connecting the controller to the Raspberry Pi
-- install pygame
-- install paho-mqtt
+- install numpy, pygame, and paho-mqtt
 
 ### 1.1 Connecting the controller
 ```
@@ -40,7 +35,11 @@ sudo bluetoothctl
 ```
 Now your controller is connected. You can find more information [here](https://approxeng.github.io/approxeng.input/api/dualshock3.html).
 
-### 1.2 Install pygame and paho-mqtt
+### 1.2 Install numpy, pygame and paho-mqtt
+In case you have not installed numpy, run 
+```
+pip install numpy
+```
 To install pygame, we first install all dependencies:
 ```
 sudo apt-get install python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev   libsdl1.2-dev libsmpeg-dev python-numpy subversion libportmidi-dev ffmpeg libswscale-dev libavformat-dev libavcodec-dev
@@ -55,8 +54,8 @@ pip install paho-mqtt
 ```
 
 ## 2. Usage
-To run the script you need to run 
+Open a terminal and navigate to the `src` directory. To run the script you need to run 
 ```
 python controller2motor.py
 ```
-The message in the terminal explains the botton settings. Once everything is setup a window will show up, as long as this window is you active window the program reacts to the controller input. To avoid that, bring the window of the program to the background. 
+The message in the terminal explains the botton settings. Once everything is setup a window will show up. As long as this window is you active supress input, just take the window of the program to the background.
